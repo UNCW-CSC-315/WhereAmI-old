@@ -12,6 +12,10 @@ import io.objectbox.Box;
 
 public class MainActivity extends AppCompatActivity {
 
+    Box<LocationRecording> locationBox;
+    LocationRecordAdapter adapter;
+
+
     RecyclerView mRecyclerView;
 
     @Override
@@ -19,11 +23,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Box<LocationRecording> locationBox = ((App) getApplication()).getBoxStore().boxFor(LocationRecording.class);
+        locationBox = ((App) getApplication()).getBoxStore().boxFor(LocationRecording.class);
 
         mRecyclerView = findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        LocationRecordAdapter adapter = new LocationRecordAdapter(locationBox);
+        adapter = new LocationRecordAdapter(locationBox);
         mRecyclerView.setAdapter(adapter);
         mRecyclerView.addItemDecoration(new DividerItemDecoration(this,
                 DividerItemDecoration.VERTICAL));
@@ -31,5 +35,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void recordClick(View view) {
         Toast.makeText(this, "This button does nothing useful!", Toast.LENGTH_SHORT).show();
+    }
+
+
+    public void clearHistory(View view) {
+        locationBox.removeAll();
+        adapter.notifyDataSetChanged();
     }
 }
